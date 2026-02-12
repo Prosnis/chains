@@ -3,336 +3,254 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chains Dashboard - Таблица с ресурсами</title>
+  <title>Chains Dashboard - Авиа цепочки</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
-    .scrollbar-thin::-webkit-scrollbar { height: 8px; }
-    .scrollbar-thin::-webkit-scrollbar-track { background: #f1f5f9; }
-    .scrollbar-thin::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .chains-scroll::-webkit-scrollbar { height: 4px; }
+    .chains-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+    .chains-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+    @keyframes slideDown {
+      from { opacity: 0; max-height: 0; transform: translateY(-10px); }
+      to { opacity: 1; max-height: 500px; transform: translateY(0); }
+    }
+    .slide-down { animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .expanded { max-height: 500px !important; display: block !important; }
+    .collapsed { max-height: 0 !important; display: none !important; }
   </style>
 </head>
 <body class="bg-gray-100 min-h-screen p-4 md:p-8 font-mono text-sm">
   <div class="max-w-7xl mx-auto">
     <!-- Header + Filters -->
-    <div class="bg-white shadow-xl rounded-2xl p-6 md:p-8 mb-8 border border-gray-200">
-      <h1 class="text-3xl md:text-4xl font-black text-gray-900 mb-6">Chains Dashboard</h1>
+    <div class="bg-white shadow-lg rounded-xl p-4 md:p-6 mb-6 border border-gray-200">
+      <h1 class="text-2xl md:text-3xl font-black text-gray-900 mb-4">Chains Dashboard</h1>
       
-      <!-- Filters -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Сеанс</label>
-          <select id="filter-seans" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-            <option value="">Все сеансы</option>
-            <option value="Session-1">Session-1</option>
-            <option value="Session-2">Session-2</option>
-            <option value="Session-3">Session-3</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Активность</label>
-          <select id="filter-activity" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-            <option value="">Все</option>
-            <option value="active">Активные</option>
-            <option value="inactive">Неактивные</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Ресурс</label>
-          <select id="filter-resource" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-            <option value="">Все ресурсы</option>
-            <option value="test.gg.ru">test.gg.ru</option>
-            <option value="prod.server.com">prod.server.com</option>
-            <option value="api.cluster.io">api.cluster.io</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">Система</label>
-          <select id="filter-system" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
-            <option value="">Все системы</option>
-            <option value="SYS-A">SYS-A</option>
-            <option value="SYS-B">SYS-B</option>
-            <option value="SYS-C">SYS-C</option>
-          </select>
-        </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mb-4">
+        <div><label class="block text-xs font-semibold text-gray-700 mb-1">Сеанс</label>
+          <select id="filter-seans" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+            <option value="">Все сеансы</option><option value="Session-1">Session-1</option><option value="Session-2">Session-2</option><option value="Session-3">Session-3</option>
+          </select></div>
+        <div><label class="block text-xs font-semibold text-gray-700 mb-1">Активность</label>
+          <select id="filter-activity" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+            <option value="">Все</option><option value="active">Активные</option><option value="inactive">Неактивные</option>
+          </select></div>
+        <div><label class="block text-xs font-semibold text-gray-700 mb-1">Ресурс</label>
+          <select id="filter-resource" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+            <option value="">Все ресурсы</option><option value="test.gg.ru">test.gg.ru</option><option value="prod.server.com">prod.server.com</option>
+          </select></div>
+        <div><label class="block text-xs font-semibold text-gray-700 mb-1">Система</label>
+          <select id="filter-system" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+            <option value="">Все системы</option><option value="SYS-A">SYS-A</option><option value="SYS-B">SYS-B</option><option value="SYS-C">SYS-C</option>
+          </select></div>
       </div>
-
-      <!-- Results counter -->
-      <div id="resultsCounter" class="text-sm text-gray-600 font-medium">Показано: <span id="count">12</span> записей</div>
+      <div id="resultsCounter" class="text-xs text-gray-600 font-medium">Показано: <span id="count">12</span> записей</div>
     </div>
 
-    <!-- Table Container -->
-    <div class="bg-white shadow-2xl rounded-3xl p-6 md:p-8 border border-gray-200">
-      <div class="overflow-x-auto scrollbar-thin">
-        <table id="chainsTable" class="w-full table-auto border-collapse">
-          <thead>
-            <tr class="bg-gradient-to-r from-gray-50 to-gray-100">
-              <th class="p-4 text-left font-bold text-xs md:text-sm text-gray-700 uppercase tracking-wider border-b-2 border-gray-200 sticky top-0 bg-gray-50 z-10">
-                Статус
-              </th>
-              <th class="p-4 text-left font-bold text-xs md:text-sm text-gray-700 uppercase tracking-wider border-b-2 border-gray-200 sticky top-0 bg-gray-50 z-10">
-                Метрики
-              </th>
-              <th class="p-4 text-left font-bold text-xs md:text-sm text-gray-700 uppercase tracking-wider border-b-2 border-gray-200 sticky top-0 bg-gray-50 z-10">
-                Имя
-              </th>
-              <th class="p-4 text-left font-bold text-xs md:text-sm text-gray-700 uppercase tracking-wider border-b-2 border-gray-200 sticky top-0 bg-gray-50 z-10">
-                Сеанс
-              </th>
-              <th class="p-4 text-left font-bold text-xs md:text-sm text-gray-700 uppercase tracking-wider border-b-2 border-gray-200 sticky top-0 bg-gray-50 z-10">
-                Система
-              </th>
-              <th class="p-6 text-left font-bold text-xs md:text-sm text-gray-700 uppercase tracking-wider border-b-2 border-gray-200 sticky top-0 bg-gray-50 z-10 min-w-[300px]">
-                Ресурсы
-              </th>
-              <th class="p-4 text-left font-bold text-xs md:text-sm text-gray-700 uppercase tracking-wider border-b-2 border-gray-200 sticky top-0 bg-gray-50 z-10">
-                Principal-Agent
-              </th>
-            </tr>
-          </thead>
-          <tbody id="tableBody">
-            <!-- Dynamic content -->
-          </tbody>
-        </table>
-      </div>
+    <!-- Компактные full-width карточки -->
+    <div id="cardsContainer" class="space-y-3">
+      <!-- Dynamic content -->
     </div>
   </div>
 
   <script>
-    // Полные моковые данные с множественными ресурсами
-    const chainsData = [
-      { 
-        id: 1, 
-        name: 'default-chain-001', 
-        seans: 'Session-1', 
-        system: 'SYS-A', 
-        principalAgent: 'principal1-agent1', 
-        active: true, 
-        iconsCount: 7, 
-        resources: ['test.gg.ru', 'prod.server.com', 'api.cluster.io']
-      },
-      { 
-        id: 2, 
-        name: 'default-chain-002', 
-        seans: 'Session-2', 
-        system: 'SYS-B', 
-        principalAgent: 'principal2-agent2', 
-        active: false, 
-        iconsCount: 3, 
-        resources: ['dev.localhost', 'staging.app.ru']
-      },
-      { 
-        id: 3, 
-        name: 'default-chain-003', 
-        seans: 'Session-1', 
-        system: 'SYS-A', 
-        principalAgent: 'principal3-agent3', 
-        active: true, 
-        iconsCount: 9, 
-        resources: ['test.gg.ru', 'metrics.internal', 'logs.cluster']
-      },
-      { 
-        id: 4, 
-        name: 'default-chain-004', 
-        seans: 'Session-3', 
-        system: 'SYS-C', 
-        principalAgent: 'principal4-agent4', 
-        active: true, 
-        iconsCount: 5, 
-        resources: ['prod.server.com', 'db.master.io', 'cache.redis']
-      },
-      { 
-        id: 5, 
-        name: 'default-chain-005', 
-        seans: 'Session-2', 
-        system: 'SYS-B', 
-        principalAgent: 'principal5-agent5', 
-        active: false, 
-        iconsCount: 2, 
-        resources: ['test.gg.ru']
-      },
-      { 
-        id: 6, 
-        name: 'default-chain-006', 
-        seans: 'Session-1', 
-        system: 'SYS-A', 
-        principalAgent: 'principal6-agent6', 
-        active: true, 
-        iconsCount: 10, 
-        resources: ['api.cluster.io', 'web.proxy.ru', 'queue.rabbit']
-      },
-      { 
-        id: 7, 
-        name: 'default-chain-007', 
-        seans: 'Session-3', 
-        system: 'SYS-C', 
-        principalAgent: 'principal7-agent7', 
-        active: true, 
-        iconsCount: 4, 
-        resources: ['prod.server.com', 'test.gg.ru']
-      },
-      { 
-        id: 8, 
-        name: 'default-chain-008', 
-        seans: 'Session-2', 
-        system: 'SYS-B', 
-        principalAgent: 'principal8-agent8', 
-        active: false, 
-        iconsCount: 6, 
-        resources: ['staging.app.ru', 'dev.localhost', 'metrics.internal']
-      },
-      { 
-        id: 9, 
-        name: 'default-chain-009', 
-        seans: 'Session-1', 
-        system: 'SYS-A', 
-        principalAgent: 'principal9-agent9', 
-        active: true, 
-        iconsCount: 8, 
-        resources: ['logs.cluster', 'db.master.io']
-      },
-      { 
-        id: 10, 
-        name: 'default-chain-010', 
-        seans: 'Session-3', 
-        system: 'SYS-C', 
-        principalAgent: 'principal10-agent10', 
-        active: true, 
-        iconsCount: 1, 
-        resources: ['cache.redis', 'api.cluster.io', 'web.proxy.ru']
-      },
-      { 
-        id: 11, 
-        name: 'default-chain-011', 
-        seans: 'Session-2', 
-        system: 'SYS-B', 
-        principalAgent: 'principal11-agent11', 
-        active: false, 
-        iconsCount: 7, 
-        resources: ['test.gg.ru', 'prod.server.com']
-      },
-      { 
-        id: 12, 
-        name: 'default-chain-012', 
-        seans: 'Session-1', 
-        system: 'SYS-A', 
-        principalAgent: 'principal12-agent12', 
-        active: true, 
-        iconsCount: 5, 
-        resources: ['queue.rabbit', 'logs.cluster', 'metrics.internal']
-      }
+    // Авиа-цепочки с реальными названиями
+    const aviationChains = [
+      'default-baggage', 'flight-checkin', 'boarding-pass', 'cargo-tracking', 'luggage-scan', 
+      'security-gate', 'gate-assignment', 'flight-plan', 'crew-schedule', 'fuel-load',
+      'passenger-list', 'weight-balance', 'pushback-time', 'taxi-clearance', 'takeoff-slot',
+      'etops-plan', 'diversion-alt', 'maintenance-log', 'slot-coordination', 'ramp-service'
     ];
 
-    // Функция рендера таблицы
-    function renderTable(data = chainsData) {
-      const tbody = document.getElementById('tableBody');
+    const chainsData = [
+      { id: 1, name: 'default-chain-001', seans: 'Session-1', system: 'SYS-A', principalAgent: 'principal1-agent1', active: true, 
+        chains: 18, chainNames: aviationChains.slice(0, 18), resources: ['test.gg.ru', 'prod.server.com', 'api.cluster.io', 'db.master.io', 'cache.redis', 'web.proxy.ru', 'queue.rabbit', 'logs.cluster', 'metrics.internal', 'staging.app.ru', 'dev.localhost', 'backup.s3', 'monitor.grafana'] },
+      { id: 2, name: 'default-chain-002', seans: 'Session-2', system: 'SYS-B', principalAgent: 'principal2-agent2', active: false, 
+        chains: 7, chainNames: aviationChains.slice(0, 7), resources: ['dev.localhost', 'test.gg.ru', 'staging.app.ru'] },
+      { id: 3, name: 'default-chain-003', seans: 'Session-1', system: 'SYS-A', principalAgent: 'principal3-agent3', active: true, chains: 12, chainNames: aviationChains.slice(2, 14), resources: ['prod.server.com', 'api.cluster.io'] },
+      { id: 4, name: 'default-chain-004', seans: 'Session-3', system: 'SYS-C', principalAgent: 'principal4-agent4', active: false, chains: 15, chainNames: aviationChains.slice(1, 16), resources: ['test.gg.ru', 'logs.cluster'] }
+    ].concat(Array.from({length: 8}, (_, i) => ({
+      id: i+5, name: `default-chain-00${i+5}`, seans: ['Session-1','Session-2','Session-3'][i%3], system: ['SYS-A','SYS-B','SYS-C'][i%3], 
+      principalAgent: `principal${i+5}-agent${i+5}`, active: i%2===0, chains: 5+i*2, 
+      chainNames: aviationChains.slice(i*2, i*2 + 5 + i%4),
+      resources: ['test.gg.ru', 'prod.server.com', 'api.cluster.io', 'db.master.io'].slice(0, 3+i%4)
+    })));
+
+    function renderCards(data = chainsData) {
+      const container = document.getElementById('cardsContainer');
       const countEl = document.getElementById('count');
       
-      tbody.innerHTML = data.map(chain => {
-        const iconsHtml = Array.from({length: chain.iconsCount}, (_, i) => 
-          `<div class="w-4 h-4 rounded-full shadow-sm inline-block ${i<4 ? 'bg-green-500' : i<7 ? 'bg-yellow-500' : 'bg-red-500'}" title="Метрика ${i+1}"></div>`
-        ).join('');
+      container.innerHTML = data.map(chain => {
+        const statusClass = chain.active ? 'border-blue-200 hover:border-blue-300 bg-gradient-to-r from-blue-50/30' : 'border-red-300 hover:border-red-400 ring-2 ring-red-200/50';
+        const statusText = chain.active ? 'text-green-700' : 'text-red-700';
+        const statusLabel = chain.active ? 'Активна' : 'Неактивна';
+        const toggleChecked = chain.active ? 'checked' : '';
         
-        // Бейджи ресурсов
-        const resourcesHtml = chain.resources.map(resource => 
-          `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 mr-1 mb-1 border border-indigo-200 hover:bg-indigo-200 transition-all">
-            <i class="fas fa-server mr-1 text-indigo-600"></i>${resource}
+        // Цепочки для превью (первые 20)
+        const chainsHtml = Array.from({length: Math.min(chain.chains, 20)}, (_, i) => 
+          `<div class="w-4 h-4 rounded-full shadow-sm flex-shrink-0 ${i<8 ? 'bg-green-500' : i<14 ? 'bg-yellow-500' : 'bg-red-500'}" title="${chain.chainNames[i] || `Цепочка ${i+1}`}"></div>`
+        ).join('') + (chain.chains > 20 ? '<span class="text-xs text-gray-500 ml-2 px-1 py-0.5 bg-gray-100 rounded">+...</span>' : '');
+        
+        const visibleResources = chain.resources.slice(0, 8);
+        const hiddenCount = chain.resources.length - 8;
+        const resourcesPreview = visibleResources.map(r => 
+          `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-indigo-100 text-indigo-800 mr-1 border border-indigo-200 hover:bg-indigo-200">
+            <i class="fas fa-server text-indigo-600 mr-1 text-xs"></i>${r}
+          </span>`
+        ).join('') + (hiddenCount > 0 ? 
+          `<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700 mr-1 border border-gray-200 cursor-pointer hover:bg-gray-200" onclick="showFullResources(${chain.id}); event.stopPropagation(); return false;">
+            +${hiddenCount}
+          </span>` : '');
+
+        // ✅ Цепочки с названиями для расширенного блока
+        const fullChainsHtml = chain.chainNames.slice(0, chain.chains).map((name, i) => 
+          `<span class="inline-flex items-center px-2 py-1 text-xs bg-gray-100 text-gray-800 border border-gray-200 rounded-lg hover:bg-gray-200 whitespace-nowrap flex-shrink-0" title="${name}">
+            <div class="w-2 h-2 rounded-full mr-1.5 ${i<8 ? 'bg-green-500' : i<14 ? 'bg-yellow-500' : 'bg-red-500'}"></div>
+            ${name}
           </span>`
         ).join('');
-        
+
         return `
-          <tr class="hover:bg-gray-50 transition-all duration-200 border-b border-gray-100 group ${!chain.active ? 'opacity-60 bg-gray-25' : ''}" onclick="openDetail(${chain.id})">
-            <!-- Статус (Toggle) -->
-            <td class="p-4 align-middle">
-              <label class="inline-flex items-center cursor-pointer group-hover:scale-110 transition-transform">
-                <input type="checkbox" ${chain.active ? 'checked' : ''} class="sr-only peer" onchange="toggleActive(${chain.id}); event.stopPropagation()">
-                <div class="relative w-12 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600 shadow-sm"></div>
-              </label>
-            </td>
+          <div class="chain-card bg-white shadow-lg rounded-2xl p-4 hover:shadow-xl transition-all duration-200 border-4 ${statusClass} group cursor-pointer w-full relative overflow-hidden" data-chain-id="${chain.id}">
             
-            <!-- Метрики (Icons Bar) -->
-            <td class="p-4 align-middle">
-              <div class="flex gap-1 items-center flex-wrap">
-                ${iconsHtml}
+            <!-- РЯД 1: Toggle + Цепочки (мобилка: 2 колонки) -->
+            <div class="grid grid-cols-1 md:flex md:items-center md:justify-between mb-3 pb-3 border-b border-gray-200 gap-3 md:gap-0">
+              <div class="flex justify-center md:justify-start">
+                <label class="toggle-label inline-flex items-center cursor-pointer group-hover:scale-105 transition-transform z-10" data-chain-id="${chain.id}">
+                  <input type="checkbox" ${toggleChecked} class="sr-only peer" onchange="toggleActive(${chain.id})">
+                  <div class="relative w-11 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600 shadow"></div>
+                  <span class="ml-1.5 text-xs font-bold ${statusText}">${statusLabel}</span>
+                </label>
               </div>
-            </td>
-            
-            <!-- Имя -->
-            <td class="p-4 align-middle font-mono font-semibold text-gray-900 group-hover:text-blue-700 transition-colors">${chain.name}</td>
-            
-            <!-- Сеанс -->
-            <td class="p-4 align-middle">${chain.seans}</td>
-            
-            <!-- Система -->
-            <td class="p-4 align-middle font-mono text-sm">${chain.system}</td>
-            
-            <!-- Ресурсы (Бейджи) -->
-            <td class="p-6 align-middle min-w-[300px] max-w-[400px]">
-              <div class="flex flex-wrap gap-1 max-w-full">
-                ${resourcesHtml}
+              <div class="chains-scroll flex justify-center md:justify-end gap-1 items-center min-w-0 flex-nowrap overflow-x-auto pb-1 max-w-full md:max-w-[75vw]">
+                ${chainsHtml}
               </div>
-            </td>
-            
-            <!-- Principal-Agent -->
-            <td class="p-4 align-middle">
-              <span class="font-mono text-blue-700 bg-blue-50 px-3 py-2 rounded-lg text-sm font-semibold">${chain.principalAgent}</span>
-            </td>
-          </tr>
+            </div>
+
+            <!-- РЯД 2: Основная информация -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center mb-3 pb-3 border-b border-gray-200">
+              <div class="font-mono font-bold text-lg text-gray-900 group-hover:text-blue-700 md:col-span-1">${chain.name}</div>
+              <div class="font-mono text-base md:col-span-1">${chain.seans}</div>
+              <div class="font-mono text-base text-gray-600 md:col-span-1">${chain.system}</div>
+              <div class="font-mono text-sm text-blue-800 bg-blue-50 px-4 py-1.5 rounded-xl font-semibold md:col-span-1">${chain.principalAgent}</div>
+            </div>
+
+            <!-- РЯД 3: Ресурсы (8 штук) -->
+            <div class="flex items-center gap-3 pb-2">
+              <span class="font-semibold text-sm text-gray-700 w-16">Ресурсы:</span>
+              <div class="flex flex-wrap gap-1 flex-1">
+                ${resourcesPreview}
+              </div>
+            </div>
+
+            <!-- ✅ КОМПАКТНЫЙ РАСШИРЕННЫЙ БЛОК -->
+            <div id="expanded-${chain.id}" class="expanded-content mt-4 pt-4 border-t border-gray-200 slide-down max-h-0 overflow-hidden collapsed">
+              <!-- Цепочки + Ресурсы в компактной рамке -->
+              <div class="p-4 bg-gradient-to-r from-indigo-50 via-blue-50 to-emerald-50 rounded-2xl border border-indigo-100 mb-6">
+                <!-- Цепочки в ряд (горизонтальный скролл) -->
+                <div class="mb-3">
+                  <h5 class="text-xs font-bold mb-2 flex items-center text-gray-800"><i class="fas fa-link mr-1 text-blue-600"></i>Цепочки (${chain.chains})</h5>
+                  <div class="chains-scroll flex gap-1.5 items-center flex-nowrap overflow-x-auto pb-1 max-h-10">
+                    ${fullChainsHtml}
+                  </div>
+                </div>
+                
+                <!-- Ресурсы (горизонтальный скролл) -->
+                <div>
+                  <h5 class="text-xs font-bold mb-2 flex items-center text-gray-800"><i class="fas fa-servers mr-1 text-green-600"></i>Ресурсы (${chain.resources.length})</h5>
+                  <div class="chains-scroll flex gap-1.5 items-center flex-nowrap overflow-x-auto pb-1 max-h-10">
+                    ${chain.resources.map(r => 
+                      `<span class="inline-flex items-center px-2.5 py-1 text-xs bg-indigo-100 text-indigo-800 border border-indigo-200 rounded-lg hover:bg-indigo-200 whitespace-nowrap flex-shrink-0">
+                        <i class="fas fa-server text-indigo-600 mr-1 text-xs"></i>${r}
+                      </span>`
+                    ).join('')}
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 4 КНОПКИ В ОДИН РЯД -->
+              <div class="flex flex-wrap gap-2 justify-center">
+                <a href="#" class="flex-1 min-w-[110px] bg-blue-500 hover:bg-blue-600 text-white py-2.5 px-4 rounded-xl font-semibold text-xs shadow-lg transition-all flex items-center justify-center">
+                  <i class="fas fa-eye mr-1"></i>Подробнее
+                </a>
+                <a href="#" class="flex-1 min-w-[110px] bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 px-4 rounded-xl font-semibold text-xs shadow-lg transition-all flex items-center justify-center">
+                  <i class="fas fa-edit mr-1"></i>Редактировать
+                </a>
+                <a href="#" class="flex-1 min-w-[110px] bg-green-500 hover:bg-green-600 text-white py-2.5 px-4 rounded-xl font-semibold text-xs shadow-lg transition-all flex items-center justify-center">
+                  <i class="fas fa-copy mr-1"></i>Создать на основе
+                </a>
+                <button class="flex-1 min-w-[110px] bg-red-500 hover:bg-red-600 text-white py-2.5 px-4 rounded-xl font-semibold text-xs shadow-lg transition-all flex items-center justify-center" onclick="deleteChain(${chain.id}); event.stopPropagation(); return false;">
+                  <i class="fas fa-trash mr-1"></i>Удалить
+                </button>
+              </div>
+            </div>
+          </div>
         `;
       }).join('');
       
       countEl.textContent = data.length;
     }
 
-    // Переключение активности
     function toggleActive(id) {
       const chain = chainsData.find(c => c.id === id);
       if (chain) {
         chain.active = !chain.active;
-        renderTable(getFilteredData());
+        renderCards(getFilteredData());
       }
     }
 
-    // Получение отфильтрованных данных
-    function getFilteredData() {
-      const seans = document.getElementById('filter-seans').value;
-      const activity = document.getElementById('filter-activity').value;
-      const resource = document.getElementById('filter-resource').value;
-      const system = document.getElementById('filter-system').value;
-
-      return chainsData.filter(chain => {
-        return (!seans || chain.seans === seans) &&
-               (!activity || (activity === 'active' ? chain.active : !chain.active)) &&
-               (!resource || chain.resources.includes(resource)) &&
-               (!system || chain.system === system);
-      });
-    }
-
-    // Открытие детальной страницы
-    function openDetail(id) {
-      const chain = chainsData.find(c => c.id === id);
-      if (chain && chain.id) {
-        window.open(`chain-detail.html?id=${chain.id}`, '_blank');
+    document.addEventListener('click', function(e) {
+      const card = e.target.closest('.chain-card');
+      if (card && !e.target.closest('.toggle-label') && !e.target.closest('[onclick*="showFullResources"]') && !e.target.closest('[onclick*="deleteChain"]')) {
+        const chainId = parseInt(card.dataset.chainId);
+        toggleExpand(chainId);
       }
-    }
+    });
 
-    // Применение фильтров
-    function applyFilters() {
-      renderTable(getFilteredData());
-    }
-
-    // Инициализация
-    document.addEventListener('DOMContentLoaded', function() {
-      // Обработчики фильтров
-      document.querySelectorAll('select').forEach(select => {
-        select.addEventListener('change', applyFilters);
-      });
+    function toggleExpand(id) {
+      const expanded = document.getElementById(`expanded-${id}`);
+      const card = document.querySelector(`[data-chain-id="${id}"]`);
       
-      // Инициальный рендер
-      renderTable();
+      if (expanded.classList.contains('collapsed')) {
+        expanded.classList.remove('collapsed');
+        expanded.classList.add('expanded');
+        card.classList.add('ring-2', 'ring-blue-200');
+      } else {
+        expanded.classList.remove('expanded');
+        expanded.classList.add('collapsed');
+        card.classList.remove('ring-2', 'ring-blue-200');
+      }
+    }
+
+    function deleteChain(id) {
+      if (confirm(`Удалить цепочку ${chainsData.find(c => c.id === id)?.name}?`)) {
+        const index = chainsData.findIndex(c => c.id === id);
+        if (index > -1) chainsData.splice(index, 1);
+        renderCards(getFilteredData());
+      }
+    }
+
+    function showFullResources(id) {
+      const chain = chainsData.find(c => c.id === id);
+      alert(`Все ресурсы ${chain.name}:\n${chain.resources.join('\n')}`);
+    }
+
+    function getFilteredData() {
+      const seans = document.getElementById('filter-seans')?.value;
+      const activity = document.getElementById('filter-activity')?.value;
+      const resource = document.getElementById('filter-resource')?.value;
+      const system = document.getElementById('filter-system')?.value;
+      return chainsData.filter(chain => 
+        (!seans || chain.seans === seans) &&
+        (!activity || (activity === 'active' ? chain.active : !chain.active)) &&
+        (!resource || chain.resources.includes(resource)) &&
+        (!system || chain.system === system)
+      );
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('select').forEach(select => select.addEventListener('change', () => renderCards(getFilteredData())));
+      renderCards();
     });
   </script>
 </body>
 </html>
-
